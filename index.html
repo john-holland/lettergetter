@@ -15,33 +15,59 @@
 		#letter-container {
 			height: 50%;
 		}
+
 	</style>
 </head>
 <body>
 <div class="container">
-	<h1>lettergetter</h1>
-	<p>Type to demo.</p>
-
-	<div id="letter-container" class="col-xs-offset-2
-									  col-xs-4 
-									  col-sm-offset-3 
-									  col-sm-4 
-									  col-md-offset-5 
-									  col-md-2
-									  col-lg-offset-5 
-									  col-lg-2">
+	<div class="row">
+		<h1>lettergetter</h1>
+		<p id="type-to-demo">Type to demo.</p>
 	</div>
 
+	<div class="row">
+		<div id="letter-container" class="col-xs-offset-2
+										  col-xs-4 
+										  col-sm-offset-3 
+										  col-sm-4 
+										  col-md-offset-5 
+										  col-md-2
+										  col-lg-offset-5 
+										  col-lg-2">
+		</div>
+	</div>
+
+	<div class="row" id="mobile-input-container">
+		<input id="mobile-input" type="text" placeholder="Type here"
+			   class="col-xs-offset-2
+					  col-xs-4 
+					  col-sm-offset-3 
+					  col-sm-4 
+					  col-md-offset-5 
+					  col-md-2
+					  col-lg-offset-5 
+					  col-lg-2"></input>
+	</div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="lettergetter.js"></script>
 <script type="text/javascript">
 	$(function(){ 
+		var isTouch = !!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+		if (!isTouch) {
+			//$("#mobile-input-container").hide();
+		} else {
+			$("#type-to-demo").hide();
+		}
+
 		$(document).keypress(function(event) {
 			  var char = String.fromCharCode(event.which);
 
 			  showWord(char, 2000);
+
+			  $("#mobile-input").val("");
 		})
 
 		function showWord(wordToShow, duration, cb){
@@ -64,15 +90,17 @@
 	        word.forEach(function(letter) {
 	            var letterOffset = (i * letterWidth) + (letterMargin * i);
 	            var $square = $("<div class='square'></div>");
+	            var topBound = letter.top * letterHeight;
+                var leftBound = letter.left * letterWidth;
 
 	            var fadeCount = 0;
-	            letter.forEach(function(point) {
+	            letter.points.forEach(function(point) {
 	                var square = $square.clone();
 
 	                $letterContainer.append(square);
 
-	                var left = (letterOffset + (point.x * letterWidth));
-	                var top = (letterTopOffset + (point.y * letterHeight));
+	                var left = (letterOffset + (point.x * letterWidth)) + leftBound;
+	                var top = (letterTopOffset + (point.y * letterHeight)) + topBound;
 	                square.css("left", left + "px");
 	                square.css("top",  top + "px");
 

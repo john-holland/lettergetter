@@ -136,6 +136,17 @@
             }
         }
 
+        var previousBottom = { x: bottomRight.x, y: bottomRight.y };
+        var previousBottomLength = length(previousBottom);
+
+        function length(point) {
+            if (typeof point.z !== 'undefined') {
+                return Math.sqrt((point.x * point.x) + (point.y * point.y) + (point.z * point.z))
+            } else {
+                return Math.sqrt((point.x * point.x) + (point.y * point.y))
+            }
+        }
+
         bottomRight.x = bottomRight.x - topLeft.x;
         bottomRight.y = bottomRight.y - topLeft.y;
 
@@ -152,6 +163,13 @@
             $(canvas).remove();
         }
 
-        return points;
+        var bottomRightLength = length(bottomRight);
+        return {
+            points: points,
+            left: topLeft.x / previousBottomLength,
+            right: bottomRight.x / bottomRightLength,
+            top: topLeft.y / previousBottomLength,
+            bottom: bottomRight.y / bottomRightLength
+        };
     }
 })();
