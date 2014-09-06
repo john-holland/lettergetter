@@ -1,0 +1,103 @@
+<html>
+<head>
+	<title>lettergetter demo</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+	<style type="text/css">
+		.square {
+			color: black;
+			background:black;
+			position: absolute;
+			width: 20px;
+			height: 20px;
+		}
+
+		#letter-container {
+			height: 50%;
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+	<h1>lettergetter</h1>
+	<p>Type to demo.</p>
+
+	<div id="letter-container" class="col-xs-offset-2 col-xs-4 col-sm-offset-3 col-sm-4 col-md-offset-5 col-md-2">
+	</div>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="lettergetter.js"></script>
+<script type="text/javascript">
+	$(function(){ 
+		$(document).keypress(function(event) {
+			  var char = String.fromCharCode(event.which);
+
+			  showWord(char, 2000);
+		})
+
+		function showWord(wordToShow, duration, cb){
+	        var word = LG.get(wordToShow);
+
+	       	var $letterContainer = $("#letter-container");
+
+	        var docWidth = $letterContainer.width();
+	        docWidth = docWidth - (docWidth * 0.1);
+	        var docHeight = $letterContainer.height();
+
+	        var letterWidth =  docWidth / word.length;
+	        var letterHeight = docHeight * 0.4;
+	        var letterTopOffset = (docHeight * 0.1) + 50;
+	        var letterMargin = 15;
+
+	        var squares = [];
+	        var i = 0;
+
+	        word.forEach(function(letter) {
+	            var letterOffset = (i * letterWidth) + (letterMargin * i);
+	            var $square = $("<div class='square'></div>");
+
+	            var fadeCount = 0;
+	            letter.forEach(function(point) {
+	                var square = $square.clone();
+
+	                $letterContainer.append(square);
+
+	                var left = (letterOffset + (point.x * letterWidth));
+	                var top = (letterTopOffset + (point.y * letterHeight));
+	                square.css("left", left + "px");
+	                square.css("top",  top + "px");
+
+	                square.hide();
+	                fadeCount += 50;
+	                square.fadeIn(fadeCount);
+	                squares.push(square);
+	            });
+
+	            i++;
+	        });
+
+	        setTimeout(function() {
+	            var squareCount = 0;
+	            squares.forEach(function(square) {
+	                square.animate({
+	                    top: "-=1000px",
+	                    left: "+=" + ((Math.random() - 0.5) * $(document).width()).toFixed(0) + "px"
+	                }, 1000, function () {
+	                    square.remove();
+	                    squareCount++;
+
+	                    if (squareCount == squares.length) {
+	                        if (cb) {
+	                            cb();
+	                        }
+	                    }
+	                });
+	            });
+	        }, duration);
+	    }
+	});
+</script
+</body>
+</html>
