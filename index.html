@@ -62,13 +62,18 @@
 			$("#type-to-demo").hide();
 		}
 
-		$(document).keypress(function(event) {
+		var keypress = function(event) {
 			  var char = String.fromCharCode(event.which);
 
 			  showWord(char, 2000);
 
 			  $("#mobile-input").val("");
-		})
+		};
+		if (!isTouch) {
+			$(document).keypress(keypress);
+		} else {
+			$("#mobile-input").keypress(keypress);
+		}
 
 		function showWord(wordToShow, duration, cb){
 	        var word = LG.get(wordToShow);

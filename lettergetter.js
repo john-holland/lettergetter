@@ -5,7 +5,8 @@
 (function(){
     window.LG = window.LG || {};
     var LG = window.LG;
-
+    LG.shouldCache = true;
+    LG.cache = { };
     /**
      * Gets a list of lists of points, representing the pixels in the letters of a word.
      * TODO: Currently getPoints doesn't get non-black pixels, but it would be cool to use the normalized distance between white and the color as the opacity.
@@ -17,6 +18,10 @@
     LG.get = function(string, font) {
         if (!string) {
             throw newError('IllegalArgument', 'A non-empty string is required.');
+        }
+
+        if (string in LG.cache) {
+            return LG.cache[string];
         }
 
         var useFont = !!font ? "40px "+ font.trim() : "40px Calibri";
@@ -32,6 +37,7 @@
 
         $(canvas).remove();
 
+        LG.cache[string] = points;
         return points;
     };
 
