@@ -72,7 +72,7 @@
 		if (!isTouch) {
 			$(document).keypress(keypress);
 		} else {
-			$("#mobile-input").keypress(keypress);
+			$("#mobile-input").keydown(keypress);
 		}
 
 		function showWord(wordToShow, duration, cb){
