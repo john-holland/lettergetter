@@ -153,16 +153,25 @@
             }
         }
 
+        function normalize(point) {
+            var pointLength = length(point);
+            return {x: point.x / pointLength, y: point.y / pointLength};
+        }
+
         bottomRight.x = bottomRight.x - topLeft.x;
         bottomRight.y = bottomRight.y - topLeft.y;
+
+
 
         //since we have the offset from topLeft, then we'll subtract that from each of the points and normalize them.
         points.forEach(function(point) {
             var x = point.x - topLeft.x;
             var y = point.y - topLeft.y;
 
-            point.x = x / bottomRight.x;
-            point.y = y / bottomRight.y;
+            var pointLength = length(bottomRight);
+
+            point.x = x / pointLength;
+            point.y = y / pointLength;
         });
 
         if (!cacheCanvas) {
