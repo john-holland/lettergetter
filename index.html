@@ -53,6 +53,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="lettergetter.js"></script>
 <script type="text/javascript">
+
 	$(function(){ 
 		var isTouch = !!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -63,7 +64,12 @@
 		}
 
 		var keypress = function(event) {
-			  var char = String.fromCharCode(event.which);
+			  var char = "";
+			  if (isTouch) {
+			  	char = $("#mobile-input").val();
+			  } else {
+			  	char = String.fromCharCode(event.which);
+			  }
 
 			  showWord(char, 2000);
 
@@ -73,6 +79,14 @@
 			$(document).keypress(keypress);
 		} else {
 			$("#mobile-input").keydown(keypress);
+		}
+
+		var squarePool = [];
+		var squareCount = 1000;
+		var $square = $("<div class='square'></div>");
+
+		for (var i = 0; i < squareCount; i++) {
+			squarePool.push($square.clone());
 		}
 
 		function showWord(wordToShow, duration, cb){
@@ -94,13 +108,19 @@
 
 	        word.forEach(function(letter) {
 	            var letterOffset = (i * letterWidth) + (letterMargin * i);
-	            var $square = $("<div class='square'></div>");
 	            var topBound = letter.top * letterHeight;
                 var leftBound = letter.left * letterWidth;
 
 	            var fadeCount = 0;
 	            letter.points.forEach(function(point) {
-	                var square = $square.clone();
+	            	var square = null;
+
+	            	if (squarePool.length) {
+	                	square = squarePool.pop();
+	            	} else {
+	            		console.log("created additional square");
+	            		square = $square.clone();
+	            	}
 
 	                $letterContainer.append(square);
 
@@ -125,7 +145,8 @@
 	                    top: "-=1000px",
 	                    left: "+=" + ((Math.random() - 0.5) * $(document).width()).toFixed(0) + "px"
 	                }, 1000, function () {
-	                    square.remove();
+	                    square.hide();
+	                    squarePool.push(square);
 	                    squareCount++;
 
 	                    if (squareCount == squares.length) {
